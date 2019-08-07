@@ -95,7 +95,7 @@ class TelegramBotCallback(Callback):
         self.acc_hist.append(logs['acc'])
         if 'val_loss' in logs:
             self.val_loss_hist.append(logs['val_loss'])
-        if 'acc_loss' in logs:
+        if 'val_acc' in logs:
             self.val_acc_hist.append(logs['val_acc'])
         self.kbot.loss_hist = self.loss_hist
         self.kbot.val_loss_hist = self.val_loss_hist
