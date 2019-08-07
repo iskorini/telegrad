@@ -44,6 +44,9 @@ class TelegramBotCallback(Callback):
         # loss history tracking
         self.loss_hist = []
         self.val_loss_hist = []
+        # acc history tracking
+        self.acc_hist = []
+        self.val_acc_hist = []
 
     def on_train_end(self, logs=None):
         self.kbot.send_message('Train Completed!')
@@ -86,10 +89,15 @@ class TelegramBotCallback(Callback):
         # Update status message
         self.kbot.set_status(message)
 
-        # Loss tracking
+        # Accuracy and Loss tracking
         # Track loss to export as an image
         self.loss_hist.append(logs['loss'])
+        self.acc_hist.append(logs['acc'])
         if 'val_loss' in logs:
             self.val_loss_hist.append(logs['val_loss'])
+        if 'acc_loss' in logs:
+            self.val_acc_hist.append(logs['val_acc'])
         self.kbot.loss_hist = self.loss_hist
         self.kbot.val_loss_hist = self.val_loss_hist
+        self.kbot.acc_hist = self.acc_hist
+        self.kbot.val_acc_hist = self.val_acc_hist

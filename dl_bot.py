@@ -56,6 +56,9 @@ class DLBot(object):
         # Initialize loss monitoring
         self.loss_hist = []
         self.val_loss_hist = []
+        # Initialize acc monitoring
+        self.acc_hist = []
+        self.val_acc_hist = []
         # Enable logging
         logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
         self.logger = logging.getLogger(__name__)
@@ -229,19 +232,23 @@ class DLBot(object):
             # First epoch wasn't finished or matplotlib isn't installed
             return
         loss_np = np.asarray(self.loss_hist)
+        acc_np = np.asarray(self.acc_hist)
         # Check if training has a validation set
         val_loss_np = np.asarray(self.val_loss_hist) if self.val_loss_hist else None
-        legend_keys = ['loss', 'val_loss'] if self.val_loss_hist else ['loss']
+        val_acc_np = np.asarray(self.val_acc_hist) if self.val_acc_hist else None
+        legend_keys = ['loss', 'acc', 'val_loss', 'val_acc'] if self.val_loss_hist else ['loss', 'acc']
 
         x = np.arange(len(loss_np))  # Epoch axes
         fig = plt.figure()
         ax = plt.axes()
-        ax.plot(x, loss_np, 'b')  # Plot training loss
+        ax.plot(x, loss_np, 'g')  # Plot training loss
+        ax.plot(x, acc_np, 'm' ) # Plot training accuracy
         if val_loss_np is not None:
             ax.plot(x, val_loss_np, 'r')  # Plot val loss
-        plt.title('Loss Convergence')
+        if val_acc_np is not None:
+            ax.plot(x, val_acc_np, 'b') # Plot val acc
+        plt.title('Acc and Loss Convergence')
         plt.xlabel('Epoch')
-        plt.ylabel('Loss')
         ax.legend(legend_keys)
         buffer = BytesIO()
         fig.savefig(buffer, format='png')
